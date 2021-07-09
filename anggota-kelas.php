@@ -336,7 +336,7 @@
                 <?php
                     if($_SESSION["Role"] == "KM") {
                         ?>
-                        <button type="button" class="btn btn-cyan btn-sm text-white" style="margin-bottom: 20px;">Tambah Anggota Kelas</button>
+                        <a href="add-anggota.php" class="btn btn-cyan btn-sm text-white" style="margin-bottom: 20px;">Tambah Anggota Kelas</a>
                     <?php
                     }
                 ?>
