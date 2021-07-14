@@ -19,7 +19,7 @@
     <meta name="robots" content="noindex,nofollow">
     <title>Matrix Admin Lite Free Versions Template by WrapPixel</title>
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon.png">
+    <link rel="icon" type="image/png" width="5" height="10" href="assets/images/3.png">
     <!-- Custom CSS -->
     <link rel="stylesheet" type="text/css" href="assets/libs/select2/dist/css/select2.min.css">
     <link rel="stylesheet" type="text/css" href="assets/libs/jquery-minicolors/jquery.minicolors.css">
@@ -65,14 +65,14 @@
                         <b class="logo-icon ps-2">
                             <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
                             <!-- Dark Logo icon -->
-                            <img src="assets/images/logo-icon.png" alt="homepage" class="light-logo" />
+                            <img src="assets/images/3.png" width="40" height="50" alt="homepage" class="light-logo" />
 
                         </b>
                         <!--End Logo icon -->
                         <!-- Logo text -->
                         <span class="logo-text">
                             <!-- dark Logo text -->
-                            <img src="assets/images/logo-text.png" alt="homepage" class="light-logo" />
+                            <img src="assets/images/1.png"  width="150" height="50" alt="homepage" class="light-logo" />
 
                         </span>
                         <!-- Logo icon -->
@@ -258,29 +258,29 @@
                 <nav class="sidebar-nav">
                     <ul id="sidebarnav" class="pt-4">
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
-                                href="index.html" aria-expanded="false"><i class="mdi mdi-view-dashboard"></i><span
+                                href="index.html" aria-expanded="false"><i class="mdi mdi-monitor"></i><span
                                     class="hide-menu">Dashboard</span></a></li>
                         <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark"
-                                href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-receipt"></i><span
+                                href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-chair-school"></i><span
                                     class="hide-menu">Kelas </span></a>
                             <ul aria-expanded="false" class="collapse  first-level">
                                 <li class="sidebar-item"><a href="form-basic.html" class="sidebar-link"><i
-                                            class="mdi mdi-note-outline"></i><span class="hide-menu"> Jadwal Kelas
+                                            class="mdi mdi-calendar-multiple"></i><span class="hide-menu"> Jadwal Kelas
                                         </span></a></li>
                                 <li class="sidebar-item"><a href="anggota-kelas.php" class="sidebar-link"><i
-                                            class="mdi mdi-note-plus"></i><span class="hide-menu"> Anggota Kelas
+                                            class="mdi mdi-account-multiple"></i><span class="hide-menu"> Anggota Kelas
                                         </span></a></li>
                                 <li class="sidebar-item"><a href="form-wizard.html" class="sidebar-link"><i
-                                            class="mdi mdi-note-plus"></i><span class="hide-menu"> Materi kuliah
+                                            class="mdi mdi-book-open-page-variant"></i><span class="hide-menu"> Materi kuliah
                                         </span></a></li>
                             </ul>
                         </li>
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
-                                href="widgets.html" aria-expanded="false"><i class="mdi mdi-chart-bubble"></i><span
+                                href="widgets.html" aria-expanded="false"><i class="mdi mdi-library-books"></i><span
                                     class="hide-menu">Tugas</span></a></li>
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
-                                href="grid.html" aria-expanded="false"><i class="mdi mdi-blur-linear"></i><span
-                                    class="hide-menu">Announcement</span></a></li>
+                                href="grid.html" aria-expanded="false"><i class="mdi mdi-clipboard-alert"></i><span
+                                    class="hide-menu">Pengumuman</span></a></li>
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
                                 href="pages-buttons.html" aria-expanded="false"><i
                                     class="mdi mdi-relative-scale"></i><span class="hide-menu">Buttons</span></a></li>
@@ -306,7 +306,7 @@
             <div class="page-breadcrumb">
                 <div class="row">
                     <div class="col-12 d-flex no-block align-items-center">
-                        <h4 class="page-title">Form Basic</h4>
+                        <h4 class="page-title">Form Pengisian Data Mahasiswa</h4>
                         <div class="ms-auto text-end">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
@@ -358,7 +358,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-md-3 mt-3">Role Mahasiswa</label>
+                                        <label class="col-sm-3 text-end control-label col-form-label">Role Mahasiswa</label>
                                         <div class="col-md-9">
                                             <select name="role" class="select2 form-select shadow-none"
                                                 style="width: 100%; height:36px;">
