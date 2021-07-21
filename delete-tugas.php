@@ -14,9 +14,10 @@
     $ts = $dt->getTimestamp()*1000;
     $today = new MongoDB\BSON\UTCDateTime($ts);
     
-    $id_tugas = $_GET['tugas'];
+    $id_kelas = $_GET['id_kelas'];
+    $id_tugas = $_GET['id_tugas'];
     $deleteTugas = $table->updateOne(
-        array('_id' => new MongoDB\BSON\ObjectID($kelas['id_kelas'])),
+        array('_id' => new MongoDB\BSON\ObjectID($id_kelas)),
         array(
             '$pull' => array(
                 'tugas' => array(
@@ -27,7 +28,7 @@
     );
 
     if($deleteTugas) {
-        header("Location: tugas-kelas.php");
+        header("Location: tugas-kuliah.php");
     }
 
 ?>

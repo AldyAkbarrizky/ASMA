@@ -10,25 +10,28 @@
     $table = $database->TugasKelas;
     $kelas = $table->findOne(['kelas' => $_SESSION["Kelas"]]);
 
-    $dt = new DateTime(date('Y-m-d H:i:s'), new DateTimeZone('UTC'));
-    $ts = $dt->getTimestamp()*1000;
-    $today = new MongoDB\BSON\UTCDateTime($ts);
+    $date = date_create_from_format('m/d/Y', $_POST['deadline']);
+    $timestamp = $date->getTimestamp()*1000;
     
-    $id_tugas = $_GET['tugas'];
-    $addTugas = $table->updateOne(
-        array('tugas.id_tugas' => new MongoDB\BSON\ObjectID($id_tugas)),
-        array('$set' => array('tugas' => array(
-            'nama_tugas' => $_POST['nama_tugas'],
-            'waktu_deadline' => 
-                new MongoDB\BSON\UTCDateTime($_POST['waktu_deadline']->getTimestamp()*1000),
-            'dosen_pengampu' => $_POST["dosen"],
-            "metode_pengerjaan" => $_POST["metode"],
-            "deskripsi_tugas" => $_POST["deskripsi"]
-        )))
-        );
+    $id_kelas = $_POST['id_kelas'];
+    $id_tugas = $_POST['id_tugas'];
+    $updateTugas = $table->updateOne(
+        array(
+            '_id' => new MongoDB\BSON\ObjectID($id_kelas),
+            'tugas.id_tugas' => new MongoDB\BSON\ObjectID($id_tugas)
+        ),
+        array('$set' => array(
+            'tugas.$.nama_tugas' => $_POST['judul'],
+            'tugas.$.waktu_deadline' => 
+                new MongoDB\BSON\UTCDateTime($timestamp),
+            'tugas.$.dosen_pengampu' => $_POST["dosen"],
+            "tugas.$.metode_pengerjaan" => $_POST["metode"],
+            "tugas.$.deskripsi_tugas" => $_POST["deskripsi"]
+        ))
+    );
 
-    if($addTugas) {
-        header("Location: tugas-kelas.php");
+    if($updateTugas) {
+        header("Location: tugas-kuliah.php");
     }
 
 ?>
