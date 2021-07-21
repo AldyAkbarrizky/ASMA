@@ -8,16 +8,14 @@
 
     $database = $client->ASMA;
     $table = $database->AnnouncementKomentar;
-    $table2 = $database->TugasKelas;
-    $kelas = $table2->findOne(['kelas' => $_SESSION["Kelas"]]);
     
-    $id_announcement = $_GET['announcement'];
+    $id_announcement = $_GET['id_announce'];
     $deleteAnnouncement = $table->deleteOne(
-        array('_id' => $id_announcement)
+        array('_id' => new MongoDB\BSON\ObjectID($id_announcement))
     );
 
     if($deleteAnnouncement) {
-        header("Location: announcement-kelas.php");
+        header("Location: announcement.php");
     }
 
 ?>

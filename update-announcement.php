@@ -8,12 +8,10 @@
 
     $database = $client->ASMA;
     $table = $database->AnnouncementKomentar;
-    $table2 = $database->TugasKelas;
-    $kelas = $table2->findOne(['kelas' => $_SESSION["Kelas"]]);
     
-    $id_announcement = $_GET['announcement'];
+    $id_announcement = $_POST['id_announcement'];
     $updateAnnouncement = $table->updateOne(
-        array('_id' => $id_announcement),
+        array('_id' => new MongoDB\BSON\ObjectID($id_announcement)),
         array(
             '$set' => array(
                 'judul' => $_POST["judul"],
@@ -23,7 +21,7 @@
     );
 
     if($updateAnnouncement) {
-        header("Location: announcement-kelas.php");
+        header("Location: announcement.php");
     }
 
 ?>

@@ -6,13 +6,19 @@
         header("Location: authentication-login.php");
     }
 
+    $id_mhs = $_GET['id_mahasiswa'];
+    $id_announcement = $_GET['id_announce'];
     $database = $client->ASMA;
     $table = $database->Mahasiswa;
     $table2 = $database->TugasKelas;
     $table3 = $database->AnnouncementKomentar;
     $mhs = $table->findOne(array('NIM' => $_SESSION['NIM']));
     $kelas = $table2->findOne(array('kelas' => $_SESSION['Kelas']));
-    $announce = $table3->find(array('id_kelas' => $kelas['id_kelas']));
+    $announcement = $table3->findOne(
+            array(
+                '_id' => new MongoDB\BSON\ObjectID($id_announcement)
+            )
+        );
 ?>
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
@@ -31,8 +37,11 @@
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" width="5" height="10" href="assets/images/3.png">
     <!-- Custom CSS -->
-    <link rel="stylesheet" type="text/css" href="assets/extra-libs/multicheck/multicheck.css">
-    <link href="assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="assets/libs/select2/dist/css/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/libs/jquery-minicolors/jquery.minicolors.css">
+    <link rel="stylesheet" type="text/css"
+        href="assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/libs/quill/dist/quill.snow.css">
     <link href="dist/css/style.min.css" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -43,6 +52,15 @@
 </head>
 
 <body>
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
     <!-- ============================================================== -->
     <!-- Main wrapper - style you can find in pages.scss -->
     <!-- ============================================================== -->
@@ -304,14 +322,12 @@
             <div class="page-breadcrumb">
                 <div class="row">
                     <div class="col-12 d-flex no-block align-items-center">
-                        <h4 class="page-title">Daftar Pengumuman Kelas <?php echo $kelas["kelas"] ?></h4>
+                        <h4 class="page-title">Form Modifikasi Data Announcement</h4>
                         <div class="ms-auto text-end">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                    <li class="breadcrumb-item"><a href="#">Kelas</a></li>
-                                    <li class="breadcrumb-item"><a href="#">Mata Kuliah</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">List Materi</li>
+                                    <li class="breadcrumb-item active" aria-current="page">Library</li>
                                 </ol>
                             </nav>
                         </div>
@@ -328,35 +344,41 @@
                 <!-- ============================================================== -->
                 <!-- Start Page Content -->
                 <!-- ============================================================== -->
-                <a href="add-announcement.php" class="btn btn-cyan btn-sm text-white" style="margin-bottom: 20px;">Tambah Tugas</a>
                 <div class="row">
-                    <?php
-                        if(empty($announce)) {
-                    ?>
-                        <div style="margin-left: 1px">Kelas kalian tidak memiliki pengumuman apapun, silakan tambahkan</div>
-                    <?php
-                        } else {
-                            foreach($announce as $item) {
-                                $mahas = $table->findOne([ '_id' => new MongoDB\BSON\ObjectID($item['id_mahasiswa']) ])
-                    ?>
-                        <div class="col-md-8" style="margin: 0 auto">
-                            <div class="card">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <form method="post" class="form-horizontal" action="update-announcement.php">
                                 <div class="card-body">
-                                    <a href="delete-announcement.php?id_announce=<?php echo $item['_id'] ?>&id_mahasiswa=<?php echo $item['id_mahasiswa'] ?>"><button type="button" class="btn btn-danger" style="float:right; color: white">Hapus</button></a>
-                                    <a href="edit-announcement.php?id_mahasiswa=<?php echo $item['id_mahasiswa'] ?>&id_announce=<?php echo $item['_id'] ?>"><button type="button" class="btn btn-info" style="float:right; margin-right: 15px">Edit</button></a>
-                                    <h3 class="card-title"><?php echo $item['judul'] ?></h3>
-                                    <strong><div>Oleh <?php echo $mahas['nama_mahasiswa']?></div></strong>    
-                                    <div><?php echo $item['waktu_posting']->toDateTime()->format('l, d F Y') ?> </div><br/>
-                                    <p><?php echo $item['deskripsi'] ?></p>
+                                    <h4 class="card-title">Edit Announcement</h4>
+                                    <input type="hidden" name="id_announcement" value="<?php echo $announcement['_id']; ?>">
+                                    <div class="form-group row">
+                                        <label for="fname"
+                                            class="col-sm-3 text-end control-label col-form-label">Judul Announcement</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" name="judul" class="form-control" id="fname"
+                                                placeholder="Masukkan judul pengumuman di sini" value="<?php echo $announcement['judul'] ?>">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="cono1"
+                                            class="col-sm-3 text-end control-label col-form-label">Deskripsi Announcement</label>
+                                        <div class="col-sm-9">
+                                            <textarea name="deskripsi" class="form-control"><?php echo $announcement['deskripsi'] ?></textarea>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="border-top">
+                                    <div class="card-body">
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                    <?php
-                            }
-                        }
-                    ?>
+                    </div>
                     
+                    </div>
                 </div>
+                <!-- editor -->
                 <!-- ============================================================== -->
                 <!-- End PAge Content -->
                 <!-- ============================================================== -->
@@ -404,17 +426,60 @@
     <script src="dist/js/sidebarmenu.js"></script>
     <!--Custom JavaScript -->
     <script src="dist/js/custom.min.js"></script>
-    <!-- this page js -->
-    <script src="assets/extra-libs/multicheck/datatable-checkbox-init.js"></script>
-    <script src="assets/extra-libs/multicheck/jquery.multicheck.js"></script>
-    <script src="assets/extra-libs/DataTables/datatables.min.js"></script>
+    <!-- This Page JS -->
+    <script src="assets/libs/inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>
+    <script src="dist/js/pages/mask/mask.init.js"></script>
+    <script src="assets/libs/select2/dist/js/select2.full.min.js"></script>
+    <script src="assets/libs/select2/dist/js/select2.min.js"></script>
+    <script src="assets/libs/jquery-asColor/dist/jquery-asColor.min.js"></script>
+    <script src="assets/libs/jquery-asGradient/dist/jquery-asGradient.js"></script>
+    <script src="assets/libs/jquery-asColorPicker/dist/jquery-asColorPicker.min.js"></script>
+    <script src="assets/libs/jquery-minicolors/jquery.minicolors.min.js"></script>
+    <script src="assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="assets/libs/quill/dist/quill.min.js"></script>
     <script>
-        /****************************************
-         *       Basic Table                   *
-         ****************************************/
-        $('#zero_config').DataTable();
-    </script>
+        //***********************************//
+        // For select 2
+        //***********************************//
+        $(".select2").select2();
 
+        /*colorpicker*/
+        $('.demo').each(function () {
+            //
+            // Dear reader, it's actually very easy to initialize MiniColors. For example:
+            //
+            //  $(selector).minicolors();
+            //
+            // The way I've done it below is just for the demo, so don't get confused
+            // by it. Also, data- attributes aren't supported at this time...they're
+            // only used for this demo.
+            //
+            $(this).minicolors({
+                control: $(this).attr('data-control') || 'hue',
+                position: $(this).attr('data-position') || 'bottom left',
+
+                change: function (value, opacity) {
+                    if (!value) return;
+                    if (opacity) value += ', ' + opacity;
+                    if (typeof console === 'object') {
+                        console.log(value);
+                    }
+                },
+                theme: 'bootstrap'
+            });
+
+        });
+        /*datwpicker*/
+        jQuery('.mydatepicker').datepicker();
+        jQuery('#datepicker-autoclose').datepicker({
+            autoclose: true,
+            todayHighlight: true
+        });
+        var quill = new Quill('#editor', {
+            theme: 'snow'
+        });
+
+    </script>
 </body>
 
 </html>
