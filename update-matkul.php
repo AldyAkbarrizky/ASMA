@@ -12,7 +12,7 @@
     $kelas = $table2->findOne(['kelas' => $_SESSION["Kelas"]]);
     
     $id_matkul = $_GET['matkul'];
-    $updateMatkul = $table->insertOne(
+    $updateMatkul = $table->updateOne(
         array('_id' => $id_matkul),
         array('$set' => array(
             'nama_matkul' => $_POST["Matkul"]

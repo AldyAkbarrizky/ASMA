@@ -1,19 +1,15 @@
 <?php
     require_once __DIR__ . "./driver.php";
-
+    
     session_start();
     if(!isset($_SESSION["Nama"])){ //if login in session is not set
         header("Location: authentication-login.php");
     }
 
+    $id_mhs = $_GET['id'];
     $database = $client->ASMA;
     $table = $database->Mahasiswa;
-    $table2 = $database->TugasKelas;
-    $kelas = $table2->
-            findOne(['kelas' => $_SESSION["Kelas"]]);
-    $anggota = $table->
-            find(['id_kelas' => $kelas['id_kelas']]);
-
+    $mhs = $table->findOne(array('_id' => new MongoDB\BSON\ObjectID($id_mhs)));
 ?>
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
@@ -32,8 +28,11 @@
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" width="5" height="10" href="assets/images/3.png">
     <!-- Custom CSS -->
-    <link rel="stylesheet" type="text/css" href="assets/extra-libs/multicheck/multicheck.css">
-    <link href="assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="assets/libs/select2/dist/css/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/libs/jquery-minicolors/jquery.minicolors.css">
+    <link rel="stylesheet" type="text/css"
+        href="assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/libs/quill/dist/quill.snow.css">
     <link href="dist/css/style.min.css" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -314,7 +313,7 @@
             <div class="page-breadcrumb">
                 <div class="row">
                     <div class="col-12 d-flex no-block align-items-center">
-                        <h4 class="page-title">Tables</h4>
+                        <h4 class="page-title">Form Pengisian Data Mahasiswa</h4>
                         <div class="ms-auto text-end">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
@@ -336,64 +335,49 @@
                 <!-- ============================================================== -->
                 <!-- Start Page Content -->
                 <!-- ============================================================== -->
-                <?php
-                    if($_SESSION["Role"] == "KM") {
-                        ?>
-                        <a href="add-anggota.php" class="btn btn-cyan btn-sm text-white" style="margin-bottom: 20px;">Tambah Anggota Kelas</a>
-                    <?php
-                    }
-                ?>
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-md-6">
                         <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Anggota Kelas</h5>
-                                <div class="table-responsive">
-                                    <table id="zero_config" class="table table-striped table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>NIM</th>
-                                                <th>Nama</th>
-                                                <th>Email</th>
-                                                <th>Role</th>
-                                                <th>Aksi</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                                foreach ($anggota as $mhs) {
-                                            ?>
-                                                <tr>
-                                                    <td><?php echo $mhs['NIM'];?></td>
-                                                    <td><?php echo $mhs['nama_mahasiswa'];?></td>
-                                                    <td><?php echo $mhs['alamat_surel'];?></td>
-                                                    <td><?php echo $mhs['role'];?></td>
-                                                    <td>
-                                                        <a href="edit-mhs.php?id=<?php echo $mhs['_id'] ?>"><button type="button" class="btn btn-info">Edit</button></a>
-                                                        <a href="delete-mhs.php?id=<?php echo $mhs['_id'] ?>"><button type="button" class="btn btn-danger">Hapus</button></a>
-                                                    </td>
-                                                </tr>
-                                            <?php
-                                                }
-                                            ?>
-                                            
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <th>NIM</th>
-                                                <th>Nama</th>
-                                                <th>Email</th>
-                                                <th>Role</th>
-                                                <th>Aksi</th>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
+                            <form method="post" class="form-horizontal" action="update-mhs.php">
+                                <div class="card-body">
+                                    <h4 class="card-title">Update Data Mahasiswa</h4>
+                                    <input type="hidden" name="id-mhs" value="<?php echo $id_mhs ?>">
+                                    <div class="form-group row">
+                                        <label for="fname"
+                                            class="col-sm-3 text-end control-label col-form-label">NIM Mahasiswa</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" name="NIM" class="form-control" id="fname"
+                                                placeholder="Masukkan NIM Mahasiswa" value="<?php echo $mhs['NIM'] ?>">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="lname" class="col-sm-3 text-end control-label col-form-label">Nama Mahasiswa</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" name="nama" class="form-control" id="lname"
+                                                placeholder="Masukkan Nama Mahasiswa" value="<?php echo $mhs['nama_mahasiswa'] ?>">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="lname"
+                                            class="col-sm-3 text-end control-label col-form-label">Email</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" name="email" class="form-control" id="lname"
+                                                placeholder="Masukkan Email Mahasiswa" value="<?php echo $mhs['alamat_surel'] ?>">
+                                        </div>
+                                    </div>
                                 </div>
-
-                            </div>
+                                <div class="border-top">
+                                    <div class="card-body">
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
+                    
+                    </div>
                 </div>
+                <!-- editor -->
                 <!-- ============================================================== -->
                 <!-- End PAge Content -->
                 <!-- ============================================================== -->
@@ -441,17 +425,60 @@
     <script src="dist/js/sidebarmenu.js"></script>
     <!--Custom JavaScript -->
     <script src="dist/js/custom.min.js"></script>
-    <!-- this page js -->
-    <script src="assets/extra-libs/multicheck/datatable-checkbox-init.js"></script>
-    <script src="assets/extra-libs/multicheck/jquery.multicheck.js"></script>
-    <script src="assets/extra-libs/DataTables/datatables.min.js"></script>
+    <!-- This Page JS -->
+    <script src="assets/libs/inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>
+    <script src="dist/js/pages/mask/mask.init.js"></script>
+    <script src="assets/libs/select2/dist/js/select2.full.min.js"></script>
+    <script src="assets/libs/select2/dist/js/select2.min.js"></script>
+    <script src="assets/libs/jquery-asColor/dist/jquery-asColor.min.js"></script>
+    <script src="assets/libs/jquery-asGradient/dist/jquery-asGradient.js"></script>
+    <script src="assets/libs/jquery-asColorPicker/dist/jquery-asColorPicker.min.js"></script>
+    <script src="assets/libs/jquery-minicolors/jquery.minicolors.min.js"></script>
+    <script src="assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="assets/libs/quill/dist/quill.min.js"></script>
     <script>
-        /****************************************
-         *       Basic Table                   *
-         ****************************************/
-        $('#zero_config').DataTable();
-    </script>
+        //***********************************//
+        // For select 2
+        //***********************************//
+        $(".select2").select2();
 
+        /*colorpicker*/
+        $('.demo').each(function () {
+            //
+            // Dear reader, it's actually very easy to initialize MiniColors. For example:
+            //
+            //  $(selector).minicolors();
+            //
+            // The way I've done it below is just for the demo, so don't get confused
+            // by it. Also, data- attributes aren't supported at this time...they're
+            // only used for this demo.
+            //
+            $(this).minicolors({
+                control: $(this).attr('data-control') || 'hue',
+                position: $(this).attr('data-position') || 'bottom left',
+
+                change: function (value, opacity) {
+                    if (!value) return;
+                    if (opacity) value += ', ' + opacity;
+                    if (typeof console === 'object') {
+                        console.log(value);
+                    }
+                },
+                theme: 'bootstrap'
+            });
+
+        });
+        /*datwpicker*/
+        jQuery('.mydatepicker').datepicker();
+        jQuery('#datepicker-autoclose').datepicker({
+            autoclose: true,
+            todayHighlight: true
+        });
+        var quill = new Quill('#editor', {
+            theme: 'snow'
+        });
+
+    </script>
 </body>
 
 </html>

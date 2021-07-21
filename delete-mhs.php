@@ -13,7 +13,7 @@
     $kelas = $table2->findOne(['kelas' => $_SESSION["Kelas"]]);
     
     $id_mhs = $_GET['id'];
-    $deleteMHS = $table->deleteOne(array('_id' => $id_mhs));
+    $deleteMHS = $table->deleteOne(array('_id' => new MongoDB\BSON\ObjectID($id_mhs)));
 
     if($deleteMHS) {
         header("Location: anggota-kelas.php");

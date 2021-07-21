@@ -12,7 +12,7 @@
     $kelas = $table2->findOne(['kelas' => $_SESSION["Kelas"]]);
     
     $id_materi = $_GET['materi'];
-    $updateMateri = $table->insertOne(
+    $updateMateri = $table->updateOne(
         array('materi_kuliah._id' => $id_materi),
         array('$set' => array(
             'judul_materi' => $_POST['judul_materi'],
