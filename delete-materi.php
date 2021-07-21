@@ -15,9 +15,12 @@
     $ts = $dt->getTimestamp()*1000;
     $today = new MongoDB\BSON\UTCDateTime($ts);
     
-    $id_materi = $_GET['materi'];
+    $id_materi = $_GET['id'];
+    $id_matkul = $_GET['id_matkul'];
     $deleteMateri = $table->updateOne(
-        array('_id' => new MongoDB\BSON\ObjectID($_POST['id_matkul'])),
+        array(
+            '_id' => new MongoDB\BSON\ObjectID($id_matkul)
+        ),
         array(
             '$pull' => array(
                 'materi_kuliah' => array(
@@ -28,7 +31,7 @@
     );
 
     if($deleteMateri) {
-        header("Location: materi.php?matkul=".$_POST['id_matkul']);
+         header("Location: materi.php?matkul=".$_GET['id_matkul']);
     }
 
 ?>

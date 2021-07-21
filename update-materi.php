@@ -11,17 +11,21 @@
     $table2 = $database->TugasKelas;
     $kelas = $table2->findOne(['kelas' => $_SESSION["Kelas"]]);
     
-    $id_materi = $_GET['materi'];
+    $id_matkul = $_POST['id_matkul'];
+    $id_materi = $_POST['id_materi'];
     $updateMateri = $table->updateOne(
-        array('materi_kuliah._id' => $id_materi),
+        array(
+            '_id' => new MongoDB\BSON\ObjectID($id_matkul),
+            'materi_kuliah.id_materi' => new MongoDB\BSON\ObjectID($id_materi)
+        ),
         array('$set' => array(
-            'judul_materi' => $_POST['judul_materi'],
-            'deskripsi' => $_POST['deskripsi_materi']
+            'materi_kuliah.$.judul_materi' => $_POST['judul_materi'],
+            'materi_kuliah.$.deskripsi' => $_POST['deskripsi_materi']
         ))
     );
 
     if($updateMateri) {
-        header("Location: materi-kuliah.php");
+        header("Location: materi.php?matkul=".$id_matkul);
     }
 
 ?>
