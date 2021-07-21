@@ -17,23 +17,23 @@
     $ts = $dt->getTimestamp()*1000;
     $today = new MongoDB\BSON\UTCDateTime($ts);
     
-    $id_ann = $_GET["announcement"];
+    $id_ann = $_POST["id_announcement"];
     $addKomentar = $table->updateOne(
-        array('_id' => $id_ann),
+        array('_id' => new MongoDB\BSON\ObjectID($id_ann)),
         array(
             '$push' => array(
                 'komentar' => array(
                     'id_komentar' => new MongoDB\BSON\ObjectID(),
-                    'id_mahasiswa' => $mhs['_id'],
+                    'id_mahasiswa' => new MongoDB\BSON\ObjectID($_POST['id_mhs']),
                     'isi_komentar' => $_POST['komentar'],
-                    'waktu_komentar' => MongoDB\BSON\UTCDateTime($ts)
+                    'waktu_komentar' => new MongoDB\BSON\UTCDateTime($ts)
                 )
             )
         )
     );
 
     if($addKomentar) {
-        header("Location: announcement-kelas.php");
+        header("Location: announcement.php");
     }
 
 ?>

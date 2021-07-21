@@ -328,7 +328,7 @@
                 <!-- ============================================================== -->
                 <!-- Start Page Content -->
                 <!-- ============================================================== -->
-                <a href="add-announcement.php" class="btn btn-cyan btn-sm text-white" style="margin-bottom: 20px;">Tambah Tugas</a>
+                <a href="add-announcement.php" class="btn btn-cyan btn-sm text-white" style="margin-bottom: 20px;">Tambah Announcement</a>
                 <div class="row">
                     <?php
                         if(empty($announce)) {
@@ -349,6 +349,35 @@
                                     <div><?php echo $item['waktu_posting']->toDateTime()->format('l, d F Y') ?> </div><br/>
                                     <p><?php echo $item['deskripsi'] ?></p>
                                 </div>
+                                <form method="post" class="form-horizontal" action="add-new-komentar.php">
+                                    <div class="border-top">
+                                        <div class="card-body" style="background-color:#DDD">
+                                            <?php
+                                                if(!empty($item['komentar'])) {
+                                                    foreach($item['komentar'] as $komen) {
+                                                        $mahas2 = $table->findOne(['_id' => new MongoDB\BSON\ObjectID($komen['id_mahasiswa'])])
+                                            ?>
+                                                        <strong><div><?php echo $mahas2['nama_mahasiswa']?></div></strong>
+                                                        <p><?php echo $komen['isi_komentar'] ?></p>
+                                                        <hr/>
+                                            <?php
+                                                    }
+                                                }
+                                            ?>
+                                            <div class="form-group row">
+                                                <div class="col-sm-9">
+                                                    <input type="hidden" name="id_announcement" value="<?php echo $item['_id'] ?>">
+                                                    <input type="hidden" name="id_mhs" value="<?php echo $mhs['_id'] ?>">
+                                                    <input type="text" name="komentar" class="form-control" id="lname"
+                                                        placeholder="Tulis Komentar">
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                                </div>                                                
+                                            </div>                                            
+                                        </div>
+                                    </div>
+                                </form>                            
                             </div>
                         </div>
                     <?php
