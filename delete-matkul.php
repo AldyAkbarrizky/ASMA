@@ -12,8 +12,8 @@
     $table2 = $database->TugasKelas;
     $kelas = $table2->findOne(['kelas' => $_SESSION["Kelas"]]);
     
-    $id_matkul = $_GET['matkul'];
-    $deleteMatkul = $table->deleteOne(array('_id' => $id_matkul));
+    $id_matkul = $_GET['id'];
+    $deleteMatkul = $table->deleteOne(array('_id' => new MongoDB\BSON\ObjectID($id_matkul)));
 
     if($deleteMatkul) {
         header("Location: materi-kuliah.php");

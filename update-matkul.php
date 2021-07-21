@@ -11,9 +11,9 @@
     $table2 = $database->TugasKelas;
     $kelas = $table2->findOne(['kelas' => $_SESSION["Kelas"]]);
     
-    $id_matkul = $_GET['matkul'];
+    $id_matkul = $_POST['id'];
     $updateMatkul = $table->updateOne(
-        array('_id' => $id_matkul),
+        array('_id' => new MongoDB\BSON\ObjectID($id_matkul)),
         array('$set' => array(
             'nama_matkul' => $_POST["Matkul"]
         ))
