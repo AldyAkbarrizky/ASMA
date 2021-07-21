@@ -1,6 +1,5 @@
 <?php
 
-
 require_once __DIR__ . "./driver.php";
 
 $database = $client->ASMA;
@@ -27,4 +26,5 @@ if($user) {
     // echo "User tidak ditemukan";
     header("Location: authentication-login.php");
 }
+
 ?>

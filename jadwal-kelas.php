@@ -1,8 +1,16 @@
 <?php
+    require_once __DIR__ . "./driver.php";
+
     session_start();
     if(!isset($_SESSION["Nama"])){ //if login in session is not set
         header("Location: authentication-login.php");
     }
+
+    $database = $client->ASMA;
+    $table = $database->JadwalMataKuliah;
+    $table2 = $database->TugasKelas;
+    $id_kelas = $table2->findOne(['kelas' => $_SESSION["Kelas"]]);
+    $jadwal = $table->findOne(['id_kelas' => $id_kelas['id_kelas']]);
 ?>
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
@@ -21,11 +29,8 @@
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" width="5" height="10" href="assets/images/3.png">
     <!-- Custom CSS -->
-    <link rel="stylesheet" type="text/css" href="assets/libs/select2/dist/css/select2.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/libs/jquery-minicolors/jquery.minicolors.css">
-    <link rel="stylesheet" type="text/css"
-        href="assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/libs/quill/dist/quill.snow.css">
+    <link rel="stylesheet" type="text/css" href="assets/extra-libs/multicheck/multicheck.css">
+    <link href="assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.css" rel="stylesheet">
     <link href="dist/css/style.min.css" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -306,12 +311,13 @@
             <div class="page-breadcrumb">
                 <div class="row">
                     <div class="col-12 d-flex no-block align-items-center">
-                        <h4 class="page-title">Form Pengisian Data Mahasiswa</h4>
+                        <h4 class="page-title">Jadwal Kelas</h4>
                         <div class="ms-auto text-end">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Library</li>
+                                    <li class="breadcrumb-item"><a href="#">Kelas</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Jadwal Kelas</li>
                                 </ol>
                             </nav>
                         </div>
@@ -328,61 +334,94 @@
                 <!-- ============================================================== -->
                 <!-- Start Page Content -->
                 <!-- ============================================================== -->
+                <?php
+                    if($_SESSION["Role"] == "KM") {
+                        if(empty($jadwal)) {
+                ?>
+                        <a href="add-jadwal.php" class="btn btn-cyan btn-sm text-white" style="margin-bottom: 20px;">Tambah Jadwal Kelas</a>
+                <?php
+                        } else {
+                ?>
+                        <a href="edit-jadwal.php" class="btn btn-cyan btn-sm text-white" style="margin-bottom: 20px;">Edit Jadwal Kelas</a>
+                <?php
+                        }
+                    }
+                ?>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-12">
                         <div class="card">
-                            <form method="post" class="form-horizontal" action="add-new-mhs.php">
-                                <div class="card-body">
-                                    <h4 class="card-title">Data Mahasiswa Baru</h4>
-                                    <div class="form-group row">
-                                        <label for="fname"
-                                            class="col-sm-3 text-end control-label col-form-label">NIM Mahasiswa</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" name="NIM" class="form-control" id="fname"
-                                                placeholder="Masukkan NIM Mahasiswa">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="lname" class="col-sm-3 text-end control-label col-form-label">Nama Mahasiswa</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" name="nama" class="form-control" id="lname"
-                                                placeholder="Masukkan Nama Mahasiswa">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="lname"
-                                            class="col-sm-3 text-end control-label col-form-label">Email</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" name="email" class="form-control" id="lname"
-                                                placeholder="Masukkan Email Mahasiswa">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-3 text-end control-label col-form-label">Role Mahasiswa</label>
-                                        <div class="col-md-9">
-                                            <select name="role" class="select2 form-select shadow-none"
-                                                style="width: 100%; height:36px;">
-                                                <option>Pilih Role</option>
-                                                <optgroup label="Role Mahasiswa">
-                                                    <option value="Sekretaris">Sekretaris</option>
-                                                    <option value="Anggota">Anggota</option>
-                                                </optgroup>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="border-top">
-                                    <div class="card-body">
-                                        <button type="submit" class="btn btn-primary">Submit</button>
-                                    </div>
-                                </div>
-                            </form>
+                            <div class="card-body">
+                                <h5 class="card-title">Jadwal Kelas <?php echo $_SESSION["Kelas"]; ?></h5>
+                            
+                            <?php
+                                if(empty($jadwal)) {
+                            ?>
+                                Kelas Kalian belum memiliki jadwal, silakan tambahkan terlebih dahulu
+                            <?php
+                                } else {
+                            ?>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Jam / Hari</th>
+                                            <th scope="col">Senin</th>
+                                            <th scope="col">Selasa</th>
+                                            <th scope="col">Rabu</th>
+                                            <th scope="col">Kamis</th>
+                                            <th scope="col">Jum'at</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php 
+                                            for($i=1; $i<=12; $i++) {
+                                        ?>
+                                            <tr>
+                                                <?php
+                                                    if($i == 1) {
+                                                        $jam = "07.00 - 07.50";
+                                                    } elseif($i == 2) {
+                                                        $jam = "07.50 - 08.40";
+                                                    } elseif($i == 3) {
+                                                        $jam = "08.40 - 09.30";
+                                                    } elseif($i == 4) {
+                                                        $jam = "09.50 - 10.40";
+                                                    } elseif($i == 5) {
+                                                        $jam = "10.40 - 11.30";
+                                                    } elseif($i == 6) {
+                                                        $jam = "11.30 - 12.20";
+                                                    } elseif($i == 7) {
+                                                        $jam = "13.00 - 13.50";
+                                                    } elseif($i == 8) {
+                                                        $jam = "13.50 - 14.40";
+                                                    } elseif($i == 9) {
+                                                        $jam = "14.40 - 15.30";
+                                                    } elseif($i == 10) {
+                                                        $jam = "15.50 - 16.40";
+                                                    } elseif($i == 11) {
+                                                        $jam = "16.40 - 17.30";
+                                                    } elseif($i == 12) {
+                                                        $jam = "17.30 - 18.20";
+                                                    }
+                                                ?>
+                                                <th scope="row"><?php echo $jam ?></th>
+                                                <td>Mark</td>
+                                                <td>Otto</td>
+                                                <td>@mdo</td>
+                                                <td>Otto</td>
+                                                <td>@mdo</td>
+                                            </tr>
+                                        <?php
+                                            }
+                                        ?>                                    
+                                    </tbody>
+                                </table>
+                            <?php
+                                }
+                            ?>
+                            </div>
                         </div>
                     </div>
-                    
-                    </div>
                 </div>
-                <!-- editor -->
                 <!-- ============================================================== -->
                 <!-- End PAge Content -->
                 <!-- ============================================================== -->
@@ -430,60 +469,17 @@
     <script src="dist/js/sidebarmenu.js"></script>
     <!--Custom JavaScript -->
     <script src="dist/js/custom.min.js"></script>
-    <!-- This Page JS -->
-    <script src="assets/libs/inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>
-    <script src="dist/js/pages/mask/mask.init.js"></script>
-    <script src="assets/libs/select2/dist/js/select2.full.min.js"></script>
-    <script src="assets/libs/select2/dist/js/select2.min.js"></script>
-    <script src="assets/libs/jquery-asColor/dist/jquery-asColor.min.js"></script>
-    <script src="assets/libs/jquery-asGradient/dist/jquery-asGradient.js"></script>
-    <script src="assets/libs/jquery-asColorPicker/dist/jquery-asColorPicker.min.js"></script>
-    <script src="assets/libs/jquery-minicolors/jquery.minicolors.min.js"></script>
-    <script src="assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-    <script src="assets/libs/quill/dist/quill.min.js"></script>
+    <!-- this page js -->
+    <script src="assets/extra-libs/multicheck/datatable-checkbox-init.js"></script>
+    <script src="assets/extra-libs/multicheck/jquery.multicheck.js"></script>
+    <script src="assets/extra-libs/DataTables/datatables.min.js"></script>
     <script>
-        //***********************************//
-        // For select 2
-        //***********************************//
-        $(".select2").select2();
-
-        /*colorpicker*/
-        $('.demo').each(function () {
-            //
-            // Dear reader, it's actually very easy to initialize MiniColors. For example:
-            //
-            //  $(selector).minicolors();
-            //
-            // The way I've done it below is just for the demo, so don't get confused
-            // by it. Also, data- attributes aren't supported at this time...they're
-            // only used for this demo.
-            //
-            $(this).minicolors({
-                control: $(this).attr('data-control') || 'hue',
-                position: $(this).attr('data-position') || 'bottom left',
-
-                change: function (value, opacity) {
-                    if (!value) return;
-                    if (opacity) value += ', ' + opacity;
-                    if (typeof console === 'object') {
-                        console.log(value);
-                    }
-                },
-                theme: 'bootstrap'
-            });
-
-        });
-        /*datwpicker*/
-        jQuery('.mydatepicker').datepicker();
-        jQuery('#datepicker-autoclose').datepicker({
-            autoclose: true,
-            todayHighlight: true
-        });
-        var quill = new Quill('#editor', {
-            theme: 'snow'
-        });
-
+        /****************************************
+         *       Basic Table                   *
+         ****************************************/
+        $('#zero_config').DataTable();
     </script>
+
 </body>
 
 </html>

@@ -310,8 +310,10 @@
                         <div class="ms-auto text-end">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Library</li>
+                                    <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+                                    <li class="breadcrumb-item"><a href="#">Kelas</a></li>
+                                    <li class="breadcrumb-item"><a href="mater-kuliah.php">Mata Kuliah</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Add Mata Kuliah</li>
                                 </ol>
                             </nav>
                         </div>
@@ -331,43 +333,15 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="card">
-                            <form method="post" class="form-horizontal" action="add-new-mhs.php">
+                            <form method="post" class="form-horizontal" action="add-new-matkul.php">
                                 <div class="card-body">
-                                    <h4 class="card-title">Data Mahasiswa Baru</h4>
+                                    <h4 class="card-title">Data Mata Kuliah Baru</h4>
                                     <div class="form-group row">
                                         <label for="fname"
-                                            class="col-sm-3 text-end control-label col-form-label">NIM Mahasiswa</label>
+                                            class="col-sm-3 text-end control-label col-form-label">Nama Mata Kuliah</label>
                                         <div class="col-sm-9">
-                                            <input type="text" name="NIM" class="form-control" id="fname"
-                                                placeholder="Masukkan NIM Mahasiswa">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="lname" class="col-sm-3 text-end control-label col-form-label">Nama Mahasiswa</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" name="nama" class="form-control" id="lname"
-                                                placeholder="Masukkan Nama Mahasiswa">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="lname"
-                                            class="col-sm-3 text-end control-label col-form-label">Email</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" name="email" class="form-control" id="lname"
-                                                placeholder="Masukkan Email Mahasiswa">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-3 text-end control-label col-form-label">Role Mahasiswa</label>
-                                        <div class="col-md-9">
-                                            <select name="role" class="select2 form-select shadow-none"
-                                                style="width: 100%; height:36px;">
-                                                <option>Pilih Role</option>
-                                                <optgroup label="Role Mahasiswa">
-                                                    <option value="Sekretaris">Sekretaris</option>
-                                                    <option value="Anggota">Anggota</option>
-                                                </optgroup>
-                                            </select>
+                                            <input type="text" name="Matkul" class="form-control" id="fname"
+                                                placeholder="Masukkan Nama Mata Kuliah">
                                         </div>
                                     </div>
                                 </div>

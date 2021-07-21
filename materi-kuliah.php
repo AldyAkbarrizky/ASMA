@@ -1,8 +1,16 @@
 <?php
+    require_once __DIR__ . "./driver.php";
+
     session_start();
     if(!isset($_SESSION["Nama"])){ //if login in session is not set
         header("Location: authentication-login.php");
     }
+
+    $database = $client->ASMA;
+    $table = $database->MateriKuliah;
+    $table2 = $database->TugasKelas;
+    $id_kelas = $table2->findOne(['kelas' => $_SESSION["Kelas"]]);
+    $materi = $table->find(['id_kelas' => $id_kelas['id_kelas']]);
 ?>
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
@@ -21,11 +29,8 @@
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" width="5" height="10" href="assets/images/3.png">
     <!-- Custom CSS -->
-    <link rel="stylesheet" type="text/css" href="assets/libs/select2/dist/css/select2.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/libs/jquery-minicolors/jquery.minicolors.css">
-    <link rel="stylesheet" type="text/css"
-        href="assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/libs/quill/dist/quill.snow.css">
+    <link rel="stylesheet" type="text/css" href="assets/extra-libs/multicheck/multicheck.css">
+    <link href="assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.css" rel="stylesheet">
     <link href="dist/css/style.min.css" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -306,12 +311,13 @@
             <div class="page-breadcrumb">
                 <div class="row">
                     <div class="col-12 d-flex no-block align-items-center">
-                        <h4 class="page-title">Form Pengisian Data Mahasiswa</h4>
+                        <h4 class="page-title">Mata Kuliah</h4>
                         <div class="ms-auto text-end">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Library</li>
+                                    <li class="breadcrumb-item"><a href="#">Kelas</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Materi Kuliah</li>
                                 </ol>
                             </nav>
                         </div>
@@ -328,61 +334,55 @@
                 <!-- ============================================================== -->
                 <!-- Start Page Content -->
                 <!-- ============================================================== -->
+                <a href="add-matkul.php" class="btn btn-cyan btn-sm text-white" style="margin-bottom: 20px;">Tambah Mata Kuliah</a>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-12">
                         <div class="card">
-                            <form method="post" class="form-horizontal" action="add-new-mhs.php">
-                                <div class="card-body">
-                                    <h4 class="card-title">Data Mahasiswa Baru</h4>
-                                    <div class="form-group row">
-                                        <label for="fname"
-                                            class="col-sm-3 text-end control-label col-form-label">NIM Mahasiswa</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" name="NIM" class="form-control" id="fname"
-                                                placeholder="Masukkan NIM Mahasiswa">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="lname" class="col-sm-3 text-end control-label col-form-label">Nama Mahasiswa</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" name="nama" class="form-control" id="lname"
-                                                placeholder="Masukkan Nama Mahasiswa">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="lname"
-                                            class="col-sm-3 text-end control-label col-form-label">Email</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" name="email" class="form-control" id="lname"
-                                                placeholder="Masukkan Email Mahasiswa">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-3 text-end control-label col-form-label">Role Mahasiswa</label>
-                                        <div class="col-md-9">
-                                            <select name="role" class="select2 form-select shadow-none"
-                                                style="width: 100%; height:36px;">
-                                                <option>Pilih Role</option>
-                                                <optgroup label="Role Mahasiswa">
-                                                    <option value="Sekretaris">Sekretaris</option>
-                                                    <option value="Anggota">Anggota</option>
-                                                </optgroup>
-                                            </select>
-                                        </div>
-                                    </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Daftar Mata Kuliah Kelas <?php echo $_SESSION["Kelas"]; ?></h5>
+                            
+                            <?php
+                                if(empty($materi)) {
+                            ?>
+                                Kelas Kalian belum memiliki mata kuliah, silakan tambahkan terlebih dahulu
+                            <?php
+                                } else {
+                            ?>
+                                <div class="table-responsive">
+                                    <table id="zero_config" class="table table-striped table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Mata Kuliah</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                                foreach ($materi as $key => $matkul) {
+                                            ?>
+                                                <tr>
+                                                    <td><?php echo $key+1 ?></td>
+                                                    <td><a href="materi.php?matkul=<?php echo $matkul['_id'] ?>"><?php echo $matkul['nama_matkul'];?></a></td>
+                                                </tr>
+                                            <?php
+                                                }
+                                            ?>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Mata Kuliah</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
                                 </div>
-                                <div class="border-top">
-                                    <div class="card-body">
-                                        <button type="submit" class="btn btn-primary">Submit</button>
-                                    </div>
-                                </div>
-                            </form>
+                            <?php
+                                }
+                            ?>
+                            </div>
                         </div>
                     </div>
-                    
-                    </div>
                 </div>
-                <!-- editor -->
                 <!-- ============================================================== -->
                 <!-- End PAge Content -->
                 <!-- ============================================================== -->
@@ -430,60 +430,17 @@
     <script src="dist/js/sidebarmenu.js"></script>
     <!--Custom JavaScript -->
     <script src="dist/js/custom.min.js"></script>
-    <!-- This Page JS -->
-    <script src="assets/libs/inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>
-    <script src="dist/js/pages/mask/mask.init.js"></script>
-    <script src="assets/libs/select2/dist/js/select2.full.min.js"></script>
-    <script src="assets/libs/select2/dist/js/select2.min.js"></script>
-    <script src="assets/libs/jquery-asColor/dist/jquery-asColor.min.js"></script>
-    <script src="assets/libs/jquery-asGradient/dist/jquery-asGradient.js"></script>
-    <script src="assets/libs/jquery-asColorPicker/dist/jquery-asColorPicker.min.js"></script>
-    <script src="assets/libs/jquery-minicolors/jquery.minicolors.min.js"></script>
-    <script src="assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-    <script src="assets/libs/quill/dist/quill.min.js"></script>
+    <!-- this page js -->
+    <script src="assets/extra-libs/multicheck/datatable-checkbox-init.js"></script>
+    <script src="assets/extra-libs/multicheck/jquery.multicheck.js"></script>
+    <script src="assets/extra-libs/DataTables/datatables.min.js"></script>
     <script>
-        //***********************************//
-        // For select 2
-        //***********************************//
-        $(".select2").select2();
-
-        /*colorpicker*/
-        $('.demo').each(function () {
-            //
-            // Dear reader, it's actually very easy to initialize MiniColors. For example:
-            //
-            //  $(selector).minicolors();
-            //
-            // The way I've done it below is just for the demo, so don't get confused
-            // by it. Also, data- attributes aren't supported at this time...they're
-            // only used for this demo.
-            //
-            $(this).minicolors({
-                control: $(this).attr('data-control') || 'hue',
-                position: $(this).attr('data-position') || 'bottom left',
-
-                change: function (value, opacity) {
-                    if (!value) return;
-                    if (opacity) value += ', ' + opacity;
-                    if (typeof console === 'object') {
-                        console.log(value);
-                    }
-                },
-                theme: 'bootstrap'
-            });
-
-        });
-        /*datwpicker*/
-        jQuery('.mydatepicker').datepicker();
-        jQuery('#datepicker-autoclose').datepicker({
-            autoclose: true,
-            todayHighlight: true
-        });
-        var quill = new Quill('#editor', {
-            theme: 'snow'
-        });
-
+        /****************************************
+         *       Basic Table                   *
+         ****************************************/
+        $('#zero_config').DataTable();
     </script>
+
 </body>
 
 </html>

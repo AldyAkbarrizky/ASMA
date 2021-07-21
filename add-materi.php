@@ -1,8 +1,16 @@
 <?php
+
+    require_once __DIR__ . "./driver.php";
+
     session_start();
     if(!isset($_SESSION["Nama"])){ //if login in session is not set
         header("Location: authentication-login.php");
     }
+
+    $id_matkul = $_GET['matkul'];
+    $database = $client->ASMA;
+    $table = $database->MateriKuliah;
+    $matkul = $table->findOne(array('_id' => new MongoDB\BSON\ObjectID($id_matkul)));
 ?>
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
@@ -310,8 +318,10 @@
                         <div class="ms-auto text-end">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Library</li>
+                                    <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+                                    <li class="breadcrumb-item"><a href="#">Kelas</a></li>
+                                    <li class="breadcrumb-item"><a href="mater-kuliah.php">Mata Kuliah</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Add Mata Kuliah</li>
                                 </ol>
                             </nav>
                         </div>
@@ -331,43 +341,31 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="card">
-                            <form method="post" class="form-horizontal" action="add-new-mhs.php">
+                            <form method="post" class="form-horizontal" action="add-new-materi.php">
                                 <div class="card-body">
-                                    <h4 class="card-title">Data Mahasiswa Baru</h4>
+                                    <h4 class="card-title">Materi Mata Kuliah Baru</h4>
+                                    <input type="hidden" name="id_matkul" value="<?php echo $id_matkul; ?>">
                                     <div class="form-group row">
                                         <label for="fname"
-                                            class="col-sm-3 text-end control-label col-form-label">NIM Mahasiswa</label>
+                                            class="col-sm-3 text-end control-label col-form-label">Nama Mata Kuliah</label>
                                         <div class="col-sm-9">
-                                            <input type="text" name="NIM" class="form-control" id="fname"
-                                                placeholder="Masukkan NIM Mahasiswa">
+                                            <input type="text" name="id_matkul" class="form-control" id="fname"
+                                                value="<?php echo $matkul['nama_matkul'] ?>" disabled>
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="lname" class="col-sm-3 text-end control-label col-form-label">Nama Mahasiswa</label>
+                                        <label for="fname"
+                                            class="col-sm-3 text-end control-label col-form-label">Judul Materi</label>
                                         <div class="col-sm-9">
-                                            <input type="text" name="nama" class="form-control" id="lname"
-                                                placeholder="Masukkan Nama Mahasiswa">
+                                            <input type="text" name="judul_materi" class="form-control" id="fname"
+                                                placeholder="Masukkan judul materi di sini">
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="lname"
-                                            class="col-sm-3 text-end control-label col-form-label">Email</label>
+                                        <label for="cono1"
+                                            class="col-sm-3 text-end control-label col-form-label">Deskripsi Materi</label>
                                         <div class="col-sm-9">
-                                            <input type="text" name="email" class="form-control" id="lname"
-                                                placeholder="Masukkan Email Mahasiswa">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-3 text-end control-label col-form-label">Role Mahasiswa</label>
-                                        <div class="col-md-9">
-                                            <select name="role" class="select2 form-select shadow-none"
-                                                style="width: 100%; height:36px;">
-                                                <option>Pilih Role</option>
-                                                <optgroup label="Role Mahasiswa">
-                                                    <option value="Sekretaris">Sekretaris</option>
-                                                    <option value="Anggota">Anggota</option>
-                                                </optgroup>
-                                            </select>
+                                            <textarea name="deskripsi_materi" class="form-control"></textarea>
                                         </div>
                                     </div>
                                 </div>

@@ -269,26 +269,26 @@
                                 href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-chair-school"></i><span
                                     class="hide-menu">Kelas </span></a>
                             <ul aria-expanded="false" class="collapse  first-level">
-                                <li class="sidebar-item"><a href="form-basic.html" class="sidebar-link"><i
+                                <li class="sidebar-item"><a href="jadwal-kelas.php" class="sidebar-link"><i
                                             class="mdi mdi-calendar-multiple"></i><span class="hide-menu"> Jadwal Kelas
                                         </span></a></li>
                                 <li class="sidebar-item"><a href="anggota-kelas.php" class="sidebar-link"><i
                                             class="mdi mdi-account-multiple"></i><span class="hide-menu"> Anggota Kelas
                                         </span></a></li>
-                                <li class="sidebar-item"><a href="form-wizard.html" class="sidebar-link"><i
+                                <li class="sidebar-item"><a href="materi-kuliah.php" class="sidebar-link"><i
                                             class="mdi mdi-book-open-page-variant"></i><span class="hide-menu"> Materi kuliah
                                         </span></a></li>
                             </ul>
                         </li>
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
-                                href="widgets.html" aria-expanded="false"><i class="mdi mdi-library-books"></i><span
+                                href="tugas-kuliah.php" aria-expanded="false"><i class="mdi mdi-library-books"></i><span
                                     class="hide-menu">Tugas</span></a></li>
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
-                                href="grid.html" aria-expanded="false"><i class="mdi mdi-clipboard-alert"></i><span
+                                href="announcement.php" aria-expanded="false"><i class="mdi mdi-clipboard-alert"></i><span
                                     class="hide-menu">Pengumuman</span></a></li>
-                        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                        <!-- <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
                                 href="pages-buttons.html" aria-expanded="false"><i
-                                    class="mdi mdi-relative-scale"></i><span class="hide-menu">Buttons</span></a></li>
+                                    class="mdi mdi-relative-scale"></i><span class="hide-menu">Buttons</span></a></li> -->
                         <!-- <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
                                 href="pages-elements.html" aria-expanded="false"><i class="mdi mdi-pencil"></i><span
                                     class="hide-menu">Elements</span></a></li> -->

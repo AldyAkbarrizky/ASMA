@@ -1,8 +1,20 @@
 <?php
+    require_once __DIR__ . "./driver.php";
+
     session_start();
     if(!isset($_SESSION["Nama"])){ //if login in session is not set
         header("Location: authentication-login.php");
     }
+
+    $database = $client->ASMA;
+    $table = $database->MateriKuliah;
+    $table2 = $database->TugasKelas;
+    $id_kelas = $table2->findOne(['kelas' => $_SESSION["Kelas"]]);
+    $matkul = $table->find(['id_kelas' => $id_kelas['id_kelas']]);
+    $matkul2 = $table->find(['id_kelas' => $id_kelas['id_kelas']]);
+    $matkul3 = $table->find(['id_kelas' => $id_kelas['id_kelas']]);
+    $matkul4 = $table->find(['id_kelas' => $id_kelas['id_kelas']]);
+    $matkul5 = $table->find(['id_kelas' => $id_kelas['id_kelas']]);
 ?>
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
@@ -306,12 +318,14 @@
             <div class="page-breadcrumb">
                 <div class="row">
                     <div class="col-12 d-flex no-block align-items-center">
-                        <h4 class="page-title">Form Pengisian Data Mahasiswa</h4>
+                        <h4 class="page-title">Form Penambahan Jadwal Kelas Baru</h4>
                         <div class="ms-auto text-end">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Library</li>
+                                    <li class="breadcrumb-item"><a href="#">Kelas</a></li>
+                                    <li class="breadcrumb-item"><a href="jadwal-kelas.php">Jadwal Kelas</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Tambah Jadwal</li>
                                 </ol>
                             </nav>
                         </div>
@@ -328,60 +342,319 @@
                 <!-- ============================================================== -->
                 <!-- Start Page Content -->
                 <!-- ============================================================== -->
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card">
-                            <form method="post" class="form-horizontal" action="add-new-mhs.php">
+                <form method="post" class="form-horizontal" action="add-new-jadwal.php">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Data Mahasiswa Baru</h4>
+                                    <h4 class="card-title">Data Perkuliahan</h4>
                                     <div class="form-group row">
                                         <label for="fname"
-                                            class="col-sm-3 text-end control-label col-form-label">NIM Mahasiswa</label>
+                                            class="col-sm-3 text-end control-label col-form-label">Tahun Ajaran</label>
                                         <div class="col-sm-9">
-                                            <input type="text" name="NIM" class="form-control" id="fname"
-                                                placeholder="Masukkan NIM Mahasiswa">
+                                            <input type="text" name="TA" class="form-control" id="fname"
+                                                placeholder="Masukkan Tahun Ajaran">
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="lname" class="col-sm-3 text-end control-label col-form-label">Nama Mahasiswa</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" name="nama" class="form-control" id="lname"
-                                                placeholder="Masukkan Nama Mahasiswa">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="lname"
-                                            class="col-sm-3 text-end control-label col-form-label">Email</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" name="email" class="form-control" id="lname"
-                                                placeholder="Masukkan Email Mahasiswa">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-3 text-end control-label col-form-label">Role Mahasiswa</label>
+                                        <label class="col-sm-3 text-end control-label col-form-label">Semester</label>
                                         <div class="col-md-9">
-                                            <select name="role" class="select2 form-select shadow-none"
+                                            <select name="Semester" class="select2 form-select shadow-none"
                                                 style="width: 100%; height:36px;">
-                                                <option>Pilih Role</option>
-                                                <optgroup label="Role Mahasiswa">
-                                                    <option value="Sekretaris">Sekretaris</option>
-                                                    <option value="Anggota">Anggota</option>
-                                                </optgroup>
+                                                <option>Pilih Semester</option>
+                                                <option value="Ganjil">Ganjil</option>
+                                                <option value="Genap">Genap</option>
                                             </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div id="jadwal-senin" class="card-body">
+                                    <h4 class="card-title">Jadwal Perkuliahan Senin</h4>
+                                    <div id="form-jadwal-senin">
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 text-end control-label col-form-label">Mata Kuliah</label>
+                                            <div class="col-md-9 mat-select">
+                                                <select name="matkul[]" class="form-select shadow-none"
+                                                    style="width: 100%; height:36px;">
+                                                    <?php
+                                                        foreach($matkul as $item) {
+                                                    ?>
+                                                        <option value="<?php echo $item["_id"] ?>"><?php echo $item["nama_matkul"] ?></option>
+                                                    <?php
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 text-end control-label col-form-label">Jenis Mata Kuliah</label>
+                                            <div class="col-md-9 mat-select">
+                                                <select name="jenis_matkul[]" class="form-select shadow-none"
+                                                    style="width: 100%; height:36px;">
+                                                    <option>Jenis Matkul</option>
+                                                    <option value="Praktikum">Praktikum</option>
+                                                    <option value="Teori">Teori</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="fname"
+                                                class="col-sm-3 text-end control-label col-form-label">Jam Awal</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" name="j_awal[]" class="form-control" id="fname"
+                                                    placeholder="Masukkan Jam Awal">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="fname"
+                                                class="col-sm-3 text-end control-label col-form-label">Jam Akhir</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" name="j_akhir[]" class="form-control" id="fname"
+                                                    placeholder="Masukkan Jam Akhir">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="border-top">
                                     <div class="card-body">
-                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                        <button type="button" id="add-jadwal-senin" class="btn btn-primary">Tambah Matkul</button>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div id="jadwal-selasa" class="card-body">
+                                    <h4 class="card-title">Jadwal Perkuliahan Selasa</h4>
+                                    <div id="form-jadwal-selasa">
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 text-end control-label col-form-label">Mata Kuliah</label>
+                                            <div class="col-md-9 mat-select">
+                                                <select name="matkul_selasa[]" class="form-select shadow-none"
+                                                    style="width: 100%; height:36px;">
+                                                    <?php
+                                                        foreach($matkul2 as $item2) {
+                                                    ?>
+                                                        <option value="<?php echo $item2["_id"] ?>"><?php echo $item2["nama_matkul"] ?></option>
+                                                    <?php
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 text-end control-label col-form-label">Jenis Mata Kuliah</label>
+                                            <div class="col-md-9 mat-select">
+                                                <select name="jenis_matkul_selasa[]" class="form-select shadow-none"
+                                                    style="width: 100%; height:36px;">
+                                                    <option>Jenis Matkul</option>
+                                                    <option value="Praktikum">Praktikum</option>
+                                                    <option value="Teori">Teori</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="fname"
+                                                class="col-sm-3 text-end control-label col-form-label">Jam Awal</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" name="j_awal_selasa[]" class="form-control" id="fname"
+                                                    placeholder="Masukkan Jam Awal">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="fname"
+                                                class="col-sm-3 text-end control-label col-form-label">Jam Akhir</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" name="j_akhir_selasa[]" class="form-control" id="fname"
+                                                    placeholder="Masukkan Jam Akhir">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="border-top">
+                                    <div class="card-body">
+                                        <button type="button" id="add-jadwal-selasa" class="btn btn-primary">Tambah Matkul</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div id="jadwal-rabu" class="card-body">
+                                    <h4 class="card-title">Jadwal Perkuliahan Rabu</h4>
+                                    <div id="form-jadwal-rabu">
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 text-end control-label col-form-label">Mata Kuliah</label>
+                                            <div class="col-md-9 mat-select">
+                                                <select name="matkul_rabu[]" class="form-select shadow-none"
+                                                    style="width: 100%; height:36px;">
+                                                    <?php
+                                                        foreach($matkul3 as $item3) {
+                                                    ?>
+                                                        <option value="<?php echo $item3["_id"] ?>"><?php echo $item3["nama_matkul"] ?></option>
+                                                    <?php
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 text-end control-label col-form-label">Jenis Mata Kuliah</label>
+                                            <div class="col-md-9 mat-select">
+                                                <select name="jenis_matkul_rabu[]" class="form-select shadow-none"
+                                                    style="width: 100%; height:36px;">
+                                                    <option>Jenis Matkul</option>
+                                                    <option value="Praktikum">Praktikum</option>
+                                                    <option value="Teori">Teori</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="fname"
+                                                class="col-sm-3 text-end control-label col-form-label">Jam Awal</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" name="j_awal_rabu[]" class="form-control" id="fname"
+                                                    placeholder="Masukkan Jam Awal">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="fname"
+                                                class="col-sm-3 text-end control-label col-form-label">Jam Akhir</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" name="j_akhir_rabu[]" class="form-control" id="fname"
+                                                    placeholder="Masukkan Jam Akhir">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="border-top">
+                                    <div class="card-body">
+                                        <button type="button" id="add-jadwal-rabu" class="btn btn-primary">Tambah Matkul</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div id="jadwal-kamis" class="card-body">
+                                    <h4 class="card-title">Jadwal Perkuliahan Kamis</h4>
+                                    <div id="form-jadwal-kamis">
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 text-end control-label col-form-label">Mata Kuliah</label>
+                                            <div class="col-md-9 mat-select">
+                                                <select name="matkul_kamis[]" class="form-select shadow-none"
+                                                    style="width: 100%; height:36px;">
+                                                    <?php
+                                                        foreach($matkul4 as $item4) {
+                                                    ?>
+                                                        <option value="<?php echo $item4["_id"] ?>"><?php echo $item4["nama_matkul"] ?></option>
+                                                    <?php
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 text-end control-label col-form-label">Jenis Mata Kuliah</label>
+                                            <div class="col-md-9 mat-select">
+                                                <select name="jenis_matkul_kamis[]" class="form-select shadow-none"
+                                                    style="width: 100%; height:36px;">
+                                                    <option>Jenis Matkul</option>
+                                                    <option value="Praktikum">Praktikum</option>
+                                                    <option value="Teori">Teori</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="fname"
+                                                class="col-sm-3 text-end control-label col-form-label">Jam Awal</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" name="j_awal_kamis[]" class="form-control" id="fname"
+                                                    placeholder="Masukkan Jam Awal">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="fname"
+                                                class="col-sm-3 text-end control-label col-form-label">Jam Akhir</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" name="j_akhir_kamis[]" class="form-control" id="fname"
+                                                    placeholder="Masukkan Jam Akhir">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="border-top">
+                                    <div class="card-body">
+                                        <button type="button" id="add-jadwal-kamis" class="btn btn-primary">Tambah Matkul</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div id="jadwal-jumat" class="card-body">
+                                    <h4 class="card-title">Jadwal Perkuliahan Jumat</h4>
+                                    <div id="form-jadwal-jumat">
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 text-end control-label col-form-label">Mata Kuliah</label>
+                                            <div class="col-md-9 mat-select">
+                                                <select name="matkul_jumat[]" class="form-select shadow-none"
+                                                    style="width: 100%; height:36px;">
+                                                    <?php
+                                                        foreach($matkul5 as $item5) {
+                                                    ?>
+                                                        <option value="<?php echo $item5["_id"] ?>"><?php echo $item5["nama_matkul"] ?></option>
+                                                    <?php
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 text-end control-label col-form-label">Jenis Mata Kuliah</label>
+                                            <div class="col-md-9 mat-select">
+                                                <select name="jenis_matkul_jumat[]" class="form-select shadow-none"
+                                                    style="width: 100%; height:36px;">
+                                                    <option>Jenis Matkul</option>
+                                                    <option value="Praktikum">Praktikum</option>
+                                                    <option value="Teori">Teori</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="fname"
+                                                class="col-sm-3 text-end control-label col-form-label">Jam Awal</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" name="j_awal_jumat[]" class="form-control" id="fname"
+                                                    placeholder="Masukkan Jam Awal">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="fname"
+                                                class="col-sm-3 text-end control-label col-form-label">Jam Akhir</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" name="j_akhir_jumat[]" class="form-control" id="fname"
+                                                    placeholder="Masukkan Jam Akhir">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="border-top">
+                                    <div class="card-body">
+                                        <button type="button" id="add-jadwal-jumat" class="btn btn-primary">Tambah Matkul</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    
-                    </div>
-                </div>
+                    <button type="submit" class="btn btn-primary">Tambah Jadwal Kelas</button>
+                </form>
                 <!-- editor -->
                 <!-- ============================================================== -->
                 <!-- End PAge Content -->
@@ -481,6 +754,42 @@
         });
         var quill = new Quill('#editor', {
             theme: 'snow'
+        });
+
+        var counter = 1;
+        $("#add-jadwal-senin").click(function () {
+            var clone = $('#form-jadwal-senin').clone();
+            clone.find('.bootstrap-select').html(function() { return $(this).find('select')[0].outerHTML });
+            clone.appendTo('#jadwal-senin');
+            clone.find('select').selectpicker();
+        });
+
+        $("#add-jadwal-selasa").click(function () {
+            var clone = $('#form-jadwal-selasa').clone();
+            clone.find('.bootstrap-select').html(function() { return $(this).find('select')[0].outerHTML });
+            clone.appendTo('#jadwal-selasa');
+            clone.find('select').selectpicker();
+        });
+
+        $("#add-jadwal-rabu").click(function () {
+            var clone = $('#form-jadwal-rabu').clone();
+            clone.find('.bootstrap-select').html(function() { return $(this).find('select')[0].outerHTML });
+            clone.appendTo('#jadwal-rabu');
+            clone.find('select').selectpicker();
+        });
+
+        $("#add-jadwal-kamis").click(function () {
+            var clone = $('#form-jadwal-kamis').clone();
+            clone.find('.bootstrap-select').html(function() { return $(this).find('select')[0].outerHTML });
+            clone.appendTo('#jadwal-kamis');
+            clone.find('select').selectpicker();
+        });
+
+        $("#add-jadwal-jumat").click(function () {
+            var clone = $('#form-jadwal-jumat').clone();
+            clone.find('.bootstrap-select').html(function() { return $(this).find('select')[0].outerHTML });
+            clone.appendTo('#jadwal-jumat');
+            clone.find('select').selectpicker();
         });
 
     </script>
